@@ -26,6 +26,16 @@ namespace testme
                 .HasMany(q => q.Answers)
                 .WithOne(a => a.Question)
                 .HasForeignKey(a => a.QuestionId);
+
+            modelBuilder.Entity<User>()
+            .HasMany(u => u.Sessions)
+            .WithOne(s => s.User)
+            .HasForeignKey(s => s.UserId);
+
+            modelBuilder.Entity<Session>()
+                .HasOne(s => s.User)
+                .WithMany(u => u.Sessions)
+                .HasForeignKey(s => s.UserId);
         }
 
     }

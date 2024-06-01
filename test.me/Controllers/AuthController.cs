@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using System.Runtime.Intrinsics.X86;
 using testme.Models;
 
 namespace testme
@@ -15,12 +16,16 @@ namespace testme
             db = new ApplicationContext();
         }
 
-        public ViewResult Index()
+        public IActionResult Index()
         {
-            //db.Users.Add(
-            //    new User("admin", "123", UserType.ADMIN)
-            //    );
-            //db.SaveChanges();
+            if(!db.Users.Any(x=>x.Username == "admin"))
+            {
+                testme.Models.User user1 = new testme.Models.User("admin", "admin", UserType.ADMIN);
+                db.Users.Add(user1);
+                db.SaveChanges();
+            }
+
+            if (Tools.isSessionActual(_cache)) return Redirect("Home");
             return View();
         }
 
@@ -28,13 +33,33 @@ namespace testme
         [HttpPost]
         public async Task<IActionResult> Index(string username, string password)
         {
-            if (!testme.Models.User.isUsernameExists(username))
+            var currentUser = testme.Models.User.getUser(username, password);
+            if (currentUser == null)
             {
                 ViewBag.Message = "Неправильный логин или пароль";
                 return View();
             }
-            return Redirect("/Home");
+
+            Session newSession = new Session(currentUser.Id);
+
+            foreach (var item in db.Sessions)
+            {
+                if (item.UserId == currentUser.Id)
+                    item.isActual = false;
+            }
+
+            db.Sessions.Add(newSession);
+            db.SaveChanges();
+            
+            _cache.Set("sessionId", newSession.SessionID.ToString());
+
+            return Redirect("Home");
         }
 
+        public IActionResult Logout()
+        {
+            _cache.Remove("sessionId");
+            return Redirect("Auth");
+        }
     }
 }

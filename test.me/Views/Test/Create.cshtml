@@ -1,0 +1,122 @@
+﻿@model testme.Models.Test
+
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление теста</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+
+<div class="container mt-5">
+
+    <div class="fs-2 mb-3" bis_skin_checked="1">
+        <a href="javascript:history.back()">Назад</a>
+     </div>
+
+    <div class="col-md-10">
+        <h2>Тест</h2>
+        <form asp-action="Create" asp-controller="Entity" method="post">
+
+            <div class="form-group">
+                <label>Название теста:</label>
+                <input name="testName" type="text" class="form-control">
+            </div>
+
+            <h2>Вопросы</h2>
+
+            <div class="col-lg-12">
+                <ul class="list-group mb-3">
+
+                    <div class="list-group-item mb-3 question" id="question">
+                        <div class="input-group mb-3">
+                                <span class="input-group-text">Вопрос</span>
+                                <input type="text" name="questions" class="form-control">
+                                <input hidden type="number" name="answersCount">
+                                <button class="btn btn-danger text-nowrap" id="DeleteQuestion" type="button">Удалить вопрос</button>
+                        </div>
+
+                        <div id="newAnswer">
+                            <button id="answerAdder" type="button" class="btn btn-primary mb-2">Добавить ответ</button>
+
+                            <div class="list-group-item" id="answer">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-danger text-nowrap" id="DeleteAnswer" type="button">Удалить ответ</button>
+                                    <span class="input-group-text">Ответ</span>
+                                    <input type="text" name="args" class="form-control">
+                                    <span>
+                                        <input required class="form-check-input" type="radio" name="1">
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div id="newQuestion"></div>
+
+                    <button id="questionAdder" type="button" class="btn btn-primary mb-2">Добавить вопрос</button>
+
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Добавить тест</button>
+            </div>
+
+        </form>
+    </div>
+
+            <script type="text/javascript">
+                $("#questionAdder").click(function () {
+                    newRowAdd =
+                `<div class="list-group-item mb-3" id="question">
+                                <div class="input-group mb-3">
+                                        <span class="input-group-text">Вопрос</span>
+                                        <input type="text" name="args" class="form-control">
+                                        <button class="btn btn-danger text-nowrap" id="DeleteQuestion" type="button">Удалить вопрос</button>
+                                </div>
+
+                                <div id="newAnswer">
+                                    <button id="answerAdder" type="button" class="btn btn-primary mb-2">Добавить ответ</button>
+                                    <div class="list-group-item" id="answer">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-danger text-nowrap" id="DeleteAnswer" type="button">Удалить ответ</button>
+                                            <span class="input-group-text">Ответ</span>
+                                            <input type="text" name="args" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+
+
+                    $('#newQuestion').append(newRowAdd);
+                });
+                $("body").on("click", "#DeleteQuestion", function () {
+                    $(this).parents("#question").remove();
+                })
+
+                $("body").on("click", "#answerAdder", function () {
+                    newRowAdd =
+                `<div class="list-group-item" id="answer">
+                                        <div class="input-group-prepend">
+                                            <button class="btn btn-danger text-nowrap" id="DeleteAnswer" type="button">Удалить ответ</button>
+                                            <span class="input-group-text">Ответ</span>
+                                            <input type="text" name="args" class="form-control">
+                                            <span>
+                                                <input required class="form-check-input" type="radio" name="1">
+                                            </span>
+                                        </div>
+                                    </div>`;
+
+
+                    $(this).parents('#newAnswer').append(newRowAdd);
+                });
+                $("body").on("click", "#DeleteAnswer", function () {
+                    $(this).parents("#answer").remove();
+                })
+            </script>
+</div>
+
