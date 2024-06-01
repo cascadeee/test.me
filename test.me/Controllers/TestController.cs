@@ -74,6 +74,19 @@ namespace testme
                 return View(testOfCurrentUser.Where(x => x.Name.ToLower().Contains(search.ToLower())).ToList());
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Create(string[] questions, int[] answersCount, string[] answers)
+        {
+            if (!Tools.isSessionActual(_cache)) return Redirect("../Auth");
+            var currentUser = Tools.getCurrentUser(_cache);
+            if (currentUser.UserType != UserType.TEACHER) return Unauthorized();
+
+            
+
+            return Content(string.Join(" ", questions));
+        }
+
+
         public IActionResult Create()
         {
             if (!Tools.isSessionActual(_cache)) return Redirect("../Auth");
