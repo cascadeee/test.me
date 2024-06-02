@@ -25,7 +25,7 @@ namespace testme
                 db.SaveChanges();
             }
 
-            if (Tools.isSessionActual(_cache)) return Redirect("Home");
+            if (Tools.isSessionActual(_cache)) return Redirect("AllTests");
             return View();
         }
 
@@ -53,7 +53,7 @@ namespace testme
             
             _cache.Set("sessionId", newSession.SessionID.ToString());
 
-            return Redirect("Home");
+            return Redirect("AllTests");
         }
 
         public IActionResult Logout()

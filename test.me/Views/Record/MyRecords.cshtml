@@ -3,13 +3,13 @@
 }
 
 @using testme.Models
-@model IEnumerable<Test>
+@model IEnumerable<Record>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Все тесты</title>
+    <title>Мои попытки</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
@@ -20,18 +20,14 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6">
-
-                <h2>Все тесты</h2>
-                <div class="input-group rounded">
-                    <input type="search" class="form-control rounded mb-3" id="search-input" placeholder="Поиск" />
-                </div>
+                <h2>Мои попытки</h2>
                 <ul class="list-group mb-3">
                     @foreach (var item in Model)
                     {
                         <li class="list-group-item">
-                            <div class="form-check">
-                                <a href="Detail/@item.Id">@item.Name</a>
-                            </div>
+                            <p class="mb-0">Тест: @item.Test.Name</p>
+                            <p class="mb-0">Правильные ответы: @item.Result</p>
+                            <p class="mb-0">Время завершения: @item.RecordTime.ToString("HH:mm d MMMM yyyy")</p>
                         </li>
                     }
                 </ul>
@@ -44,7 +40,7 @@
                 if (e.which == 13) {
                     e.preventDefault();
                     var query = $(this).val();
-                    window.location.href = '/AllTests?search=' + encodeURIComponent(query);
+                    window.location.href = '/AllUsers?search=' + encodeURIComponent(query);
                 }
             });
         });

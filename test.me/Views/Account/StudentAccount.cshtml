@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Account</title>
+    <title>Student Account</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
         body, html {
@@ -26,7 +26,7 @@
                     <a href="javascript:history.back()">Назад</a> <h2>@ViewBag.Username</h2>
                 </div>
                 <a href="AllTests" class="list-group-item list-group-item-action">Все тесты</a>
-                <a href="MyTests?userId=@ViewBag.UserId" class="list-group-item list-group-item-action">Мои тесты</a>
+                <a href="../MyRecords?userId=@ViewBag.UserId" class="list-group-item list-group-item-action">Мои попытки</a>
                 <a href="Logout" class="list-group-item list-group-item-action text-danger">Выйти из аккаунта</a
             </div>
         </div>

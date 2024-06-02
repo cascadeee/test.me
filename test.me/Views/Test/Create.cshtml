@@ -1,4 +1,8 @@
-﻿<head>
+﻿@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<head>
     <meta charset="UTF-8">
     <title>Добавление теста</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,7 +78,7 @@
                 var answersCount = $(this).find(".answer").length;
                 $(this).find(".answersCount").val(answersCount);
                 $(this).find(".answer").each(function (aIndex) {
-                    $(this).find(".form-check-input").attr("name", "question_" + qIndex);
+                    $(this).find(".form-check-input").attr("name", "index[" + qIndex+"]");
                     $(this).find(".form-check-input").val(aIndex);
                 });
             });
@@ -98,7 +102,7 @@
                                     <div class="input-group-prepend">
                                         <button class="btn btn-danger text-nowrap" id="DeleteAnswer" type="button">Удалить ответ</button>
                                         <span class="input-group-text">Ответ</span>
-                                        <input type="text" name="args" class="form-control">
+                                        <input type="text" name="answers" class="form-control">
                                         <span>
                                             <input required class="form-check-input" type="radio" name="question_${questionIndex}" value="0">
                                         </span>
@@ -127,7 +131,7 @@
                             <div class="input-group-prepend">
                                 <button class="btn btn-danger text-nowrap" id="DeleteAnswer" type="button">Удалить ответ</button>
                                 <span class="input-group-text">Ответ</span>
-                                <input type="text" name="args" class="form-control">
+                                <input type="text" name="answers" class="form-control">
                                 <span>
                                     <input required class="form-check-input" type="radio" name="question_${qIndex}" value="${aIndex}">
                                 </span>

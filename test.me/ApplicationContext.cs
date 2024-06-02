@@ -10,6 +10,7 @@ namespace testme
         public DbSet<Test> Tests => Set<Test>();
         public DbSet<Question> Questions => Set<Question>();
         public DbSet<Answer> Answers => Set<Answer>();
+        public DbSet<Record> Records => Set<Record>();
         
         public ApplicationContext() => Database.EnsureCreated();
 

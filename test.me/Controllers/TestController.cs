@@ -31,12 +31,15 @@ namespace testme
 
             if (!Tools.isSessionActual(_cache)) return Redirect("Auth");
             var currentUser = Tools.getCurrentUser(_cache);
-            if (currentUser.UserType != UserType.STUDENT) return Unauthorized();
+            if (currentUser.UserType != UserType.STUDENT) return Content("Только студенты могут проходить тесты.");
             ViewBag.Username = currentUser.Username;
+            ViewBag.SessionId = Tools.getCurrentSessionId(_cache);
 
             Test currentTest = db.Tests.FirstOrDefault(x => x.Id == id);
             if (currentTest == null)
                 return NotFound();
+
+            if (db.Records.Any(x => x.UserId == currentUser.Id && x.TestId == id)) return Content("Вы уже проходили данный тест.");
 
             currentTest.Questions = db.Questions.Where(x => x.TestId == currentTest.Id).ToList();
             foreach(var item in currentTest.Questions)
@@ -46,23 +49,11 @@ namespace testme
             return View(currentTest);
         }
 
-        
-        public IActionResult Check(int testId, string sessionId, Dictionary<int, int> answers)
-        {
-            if (!Tools.isSessionActual(_cache)) return Redirect("Auth");
-            var currentUser = Tools.getCurrentUser(_cache);
-            if (currentUser.UserType != UserType.STUDENT) return Unauthorized();
-
-            ViewBag.Username = currentUser.Username;
-
-            return Content(string.Join(" ", answers));
-        }
-
         public IActionResult MyTests(int userId, string search)
         {
             if (!Tools.isSessionActual(_cache)) return Redirect("../Auth");
             var currentUser = Tools.getCurrentUser(_cache);
-            if (userId != currentUser.Id) return Unauthorized();
+            if (userId != currentUser.Id && currentUser.UserType != UserType.TEACHER) return Unauthorized();
             ViewBag.Username = currentUser.Username;
             ViewBag.UserId = currentUser.Id;
 
@@ -75,15 +66,43 @@ namespace testme
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(string[] questions, int[] answersCount, string[] answers)
+        public async Task<IActionResult> Create(string testName, string[] questions, int[] answersCount, string[] answers, int[] index)
         {
             if (!Tools.isSessionActual(_cache)) return Redirect("../Auth");
             var currentUser = Tools.getCurrentUser(_cache);
             if (currentUser.UserType != UserType.TEACHER) return Unauthorized();
 
-            
+            if (db.Tests.Any(x => x.Name == testName)) return Content("Тест с таким названием уже существует.");
 
-            return Content(string.Join(" ", questions));
+            if (questions.Length<=0) return Content("Вы не можете создать тест без вопросов.");
+
+            foreach (var item in answersCount)
+                if (item <= 1) return Content("У вопроса должно быть минимум два ответа.");
+
+            Test newTest = new Test();    
+            newTest.Name = testName;
+            newTest.CreatorId = currentUser.Id;
+
+            int c = 0;
+
+            for (int i = 0; i < questions.Length; i++)
+            {
+                Question question = new Question();
+                question.Text = questions[i];
+                question.CorrectAnswerId = index[i];
+                for (int j = 0; j < answersCount[i]; j++)
+                {
+                    Answer answer = new Answer();
+                    answer.Text = answers[c++];
+                    question.Answers.Add(answer);
+                }
+                newTest.Questions.Add(question); 
+            }
+
+            db.Tests.Add(newTest);
+            db.SaveChanges();
+
+            return RedirectToAction("AllTests");
         }
 
 
@@ -92,6 +111,7 @@ namespace testme
             if (!Tools.isSessionActual(_cache)) return Redirect("../Auth");
             var currentUser = Tools.getCurrentUser(_cache);
             if (currentUser.UserType != UserType.TEACHER) return Unauthorized();
+            ViewBag.Username = currentUser.Username;
 
             return View();
         }
