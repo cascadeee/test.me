@@ -65,6 +65,22 @@ namespace testme
                 return View(testOfCurrentUser.Where(x => x.Name.ToLower().Contains(search.ToLower())).ToList());
         }
 
+        
+        public async Task<IActionResult> Delete(int userId, int testId)
+        {
+            if (!Tools.isSessionActual(_cache)) return Redirect("../Auth");
+            var currentUser = Tools.getCurrentUser(_cache);
+            if (userId != currentUser.Id && currentUser.UserType != UserType.TEACHER) return Unauthorized();
+
+            Test testToRemove = db.Tests.FirstOrDefault(x => x.Id == testId);
+            if(testToRemove == null) return NotFound();
+
+            db.Tests.Remove(testToRemove);
+            db.SaveChanges();
+
+            return RedirectToAction("AllTests");
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(string testName, string[] questions, int[] answersCount, string[] answers, int[] index)
         {

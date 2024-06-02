@@ -20,9 +20,6 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6">
-                <div class="fs-2 mb-3" bis_skin_checked="1">
-                    <a href="javascript:history.back()">Назад</a>
-                </div>
                 <h2>Мои тесты</h2>
                 <a href="../MyTests/Create">Добавить тест</a>
                 <div class="input-group rounded">
@@ -33,7 +30,8 @@
                     {
                         <li class="list-group-item">
                             <div class="form-check">
-                                <a href="Detail/@item.Id">@item.Name</a>
+                                <a href="../CheckRecords?testId=@item.Id">@item.Name</a>
+                                <p><a class="text-danger delete-link" href="#" data-testid="@item.Id">Удалить тест</a></p>
                             </div>
                         </li>
                     }
@@ -41,8 +39,29 @@
             </div>
         </div>
     </div>
+
+    <!-- Модальное окно -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Подтверждение удаления</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Вы уверены, что хотите удалить этот тест?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+                    <a href="#" id="confirmDeleteBtn" class="btn btn-danger">Удалить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        
         $(document).ready(function () {
             $('#search-input').on('keypress', function (e) {
                 if (e.which == 13) {
@@ -50,6 +69,14 @@
                     var query = $(this).val();
                     window.location.href = '/MyTests?userId=@ViewBag.UserId&search=' + encodeURIComponent(query);
                 }
+            });
+
+            $('.delete-link').on('click', function (e) {
+                e.preventDefault();
+                var testId = $(this).data('testid');
+                var userId = '@ViewBag.UserId';
+                $('#confirmDeleteBtn').attr('href', '../MyTests/Delete?userId=' + userId + '&testId=' + testId);
+                $('#deleteModal').modal('show');
             });
         });
     </script>

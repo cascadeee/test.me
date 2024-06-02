@@ -75,8 +75,11 @@ namespace testme.Controllers
             var currentUser = Tools.getCurrentUser(_cache);
             if (currentUser.UserType != UserType.ADMIN) return Unauthorized();
 
+            if (id == currentUser.Id) return Content("Вы не можете удалить себя.");
+
             User userToDelete = db.Users.FirstOrDefault(x => x.Id == id);
             if (userToDelete == null) return NotFound();
+
 
             db.Users.Remove(userToDelete);
             db.SaveChanges();

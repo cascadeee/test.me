@@ -36,8 +36,10 @@ app.MapControllerRoute(name: "UsersCreate", pattern: "/AllUsers/Create", default
 app.MapControllerRoute(name: "AllTests", pattern: "/AllTests", defaults: new { controller = "Test", action = "AllTests" });
 app.MapControllerRoute(name: "MyTests", pattern: "/MyTests", defaults: new { controller = "Test", action = "MyTests" });
 app.MapControllerRoute(name: "MyTestsCreate", pattern: "/MyTests/Create", defaults: new { controller = "Test", action = "Create" });
+app.MapControllerRoute(name: "MyTestsDelete", pattern: "/MyTests/Delete", defaults: new { controller = "Test", action = "Delete" });
 
 app.MapControllerRoute(name: "MyRecords", pattern: "/MyRecords", defaults: new { controller = "Record", action = "MyRecords" });
 app.MapControllerRoute(name: "RecordCreate", pattern: "/Record/Create", defaults: new { controller = "Record", action = "Create" });
+app.MapControllerRoute(name: "CheckRecords", pattern: "/CheckRecords", defaults: new { controller = "Record", action = "CheckRecords" });
 
 app.Run();

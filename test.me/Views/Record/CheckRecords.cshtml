@@ -1,0 +1,49 @@
+﻿@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@using testme.Models
+@model IEnumerable<Record>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои попытки</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Все попытки теста</h2>
+                <ul class="list-group mb-3">
+                    @foreach (var item in Model)
+                    {
+                        <li class="list-group-item">
+                            <p class="mb-0">Студент: @item.User.Username</p>
+                            <p class="mb-0">Правильные ответы: @item.Result</p>
+                            <p class="mb-0">Время завершения: @item.RecordTime.ToString("HH:mm d MMMM yyyy")</p>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#search-input').on('keypress', function (e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    var query = $(this).val();
+                    window.location.href = '/AllUsers?search=' + encodeURIComponent(query);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -15,11 +15,29 @@ namespace testme.Controllers
             db = new ApplicationContext();
         }
 
+        public IActionResult CheckRecords(int testId)
+        {
+            if (!Tools.isSessionActual(_cache)) return Redirect("../Auth");
+            var currentTest = db.Tests.FirstOrDefault(x => x.Id == testId);
+
+            if (currentTest == null) return NotFound();
+
+            var currentUser = Tools.getCurrentUser(_cache);
+            if (currentTest.CreatorId != currentUser.Id || currentUser.UserType != UserType.TEACHER) return Unauthorized();
+            ViewBag.Username = currentUser.Username;
+
+            var records = db.Records.Where(x=>x.TestId == testId);
+            foreach (var record in records) {
+                record.User = db.Users.FirstOrDefault(x=>x.Id == record.UserId);
+            }
+            return View(records);
+        }
+
         public IActionResult MyRecords(int userId)
         {
             if (!Tools.isSessionActual(_cache)) return Redirect("../Auth");
             var currentUser = Tools.getCurrentUser(_cache);
-            if (userId != currentUser.Id && currentUser.UserType != UserType.STUDENT) return Unauthorized();
+            if (userId != currentUser.Id || currentUser.UserType != UserType.STUDENT) return Unauthorized();
 
             ViewBag.Username = currentUser.Username;
 
@@ -38,7 +56,7 @@ namespace testme.Controllers
         {
             if (!Tools.isSessionActual(_cache)) return Redirect("../Auth");
             var currentUser = Tools.getCurrentUser(_cache);
-            if (currentUser.UserType != UserType.STUDENT && sessionId != Tools.getCurrentSessionId(_cache).ToString()) return Unauthorized();
+            if (currentUser.UserType != UserType.STUDENT || sessionId != Tools.getCurrentSessionId(_cache).ToString()) return Unauthorized();
 
             ViewBag.Username = currentUser.Username;
 
